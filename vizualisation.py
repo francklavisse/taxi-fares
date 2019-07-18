@@ -79,3 +79,7 @@ def hist_passenger_count(df):
     plt.xlabel("Passenger Count")       
     plt.title("Histogram of Passenger Count")
     plt.show()
+
+def scatter_fare_distance(df):
+    df.plot.scatter('fare_amount', 'distance')    
+    plt.show()
