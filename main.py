@@ -1,5 +1,6 @@
 import pandas as pd
 import vizualisation as graphic
+from sklearn.preprocessing import scale
 
 airports = {
     'JFK_Airport': (-73.78, 40.643),
@@ -56,6 +57,17 @@ def feature_engineering(df2):
     df2 = airport_distance(df2)
     return df2    
 
+def scale_df(df2):
+    df_prescaled = df2.copy()
+    df_scaled = df2.drop(['fare_amount'], axis=1)
+    df_scaled = scale(df_scaled)
+    cols = df2.columns.tolist()
+    cols.remove('fare_amount')
+    df_scaled = pd.DataFrame(df_scaled, columns=cols, index=df2.index)
+    df_scaled = pd.concat([df_scaled, df['fare_amount']], axis=1)
+    return df_prescaled, df_scaled.copy()
+
+
 df2 = data_cleaning()
 df2 = feature_engineering(df2)
 
@@ -66,4 +78,6 @@ df2 = feature_engineering(df2)
 # graphic.hist_passenger_count(df2)
 # graphic.scatter_fare_distance(df2)
 
-print(df2[['key', 'pickup_longitude', 'pickup_latitude', 'dropoff_longitude', 'dropoff_latitude', 'pickup_dist_JFK_Airport', 'dropoff_dist_JFK_Airport']].head())
+# print(df2[['key', 'pickup_longitude', 'pickup_latitude', 'dropoff_longitude', 'dropoff_latitude', 'pickup_dist_JFK_Airport', 'dropoff_dist_JFK_Airport']].head())
+
+df_prescaled, df_scaled = scale_df(df2)
