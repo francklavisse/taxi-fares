@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 # main airports of NYC
 landmarks = {
@@ -10,22 +11,23 @@ landmarks = {
     'Brooklyn': (-73.95, 40.66)
 }
 
+
 def draw_landmarks(ax):
     for landmark in landmarks:
         ax.plot(landmarks[landmark][0], landmarks[landmark][1],
-                 '*', markersize=15, alpha=1, color='r'
-                 )
+                '*', markersize=15, alpha=1, color='r'
+                )
         ax.annotate(landmark,
-                     (landmarks[landmark][0] + 0.005,
-                      landmarks[landmark][1] + 0.005),
-                     color='r')
+                    (landmarks[landmark][0] + 0.005,
+                     landmarks[landmark][1] + 0.005),
+                    color='r')
 
 
 def plot_lat_long(df):
     plt.subplots(2, 1, figsize=(12, 12))
 
-    ax1=plt.subplot(2, 1, 1)
-    ax2=plt.subplot(2, 1, 2)
+    ax1 = plt.subplot(2, 1, 1)
+    ax2 = plt.subplot(2, 1, 2)
     draw_landmarks(ax1)
     draw_landmarks(ax2)
 
@@ -47,4 +49,21 @@ def plot_lat_long(df):
     ax2.set_xlabel("Latitude")
     ax2.set_ylabel("Longitude")
 
+    plt.show()
+
+
+def hist_rides_by_day(df):
+    df['day_of_week'].plot.hist(
+        bins=np.arange(8) - 0.5,
+        ec='black',
+        ylim=(60000, 75000)
+    )
+    plt.xlabel('Day of Week (0=Monday, 6=Sunday)')
+    plt.title('Day of Week Histogram')
+    plt.show()
+
+def hist_rides_by_hour(df):
+    df['hour'].plot.hist(bins=24, ec='black')
+    plt.title('Pickup Hour Histogram')
+    plt.xlabel('Hour')
     plt.show()

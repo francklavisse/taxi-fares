@@ -1,5 +1,5 @@
 import pandas as pd
-from vizualisation import plot_lat_long
+import vizualisation as graphic
 
 # found dataset on Kaggle
 df = pd.read_csv('NYC_taxi.csv', parse_dates=['pickup_datetime'], nrows=500000)
@@ -22,6 +22,18 @@ def data_cleaning():
                         (dfcopy[lat] < nyc_max_latitude)]
     return dfcopy
 
-df2 = data_cleaning()
+def data_serialize(df2):    
+    df2['year'] = df2['pickup_datetime'].dt.year
+    df2['month'] = df2['pickup_datetime'].dt.month
+    df2['day'] = df2['pickup_datetime'].dt.day
+    df2['day_of_week'] = df2['pickup_datetime'].dt.dayofweek
+    df2['hour'] = df2['pickup_datetime'].dt.hour
+    return df2
 
-plot_lat_long(df2)
+df2 = data_cleaning()
+df2 = data_serialize(df2)
+
+graphic.plot_lat_long(df2)
+graphic.hist_rides_by_day(df2)
+graphic.hist_rides_by_hour(df2)
+
