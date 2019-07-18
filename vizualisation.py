@@ -67,3 +67,15 @@ def hist_rides_by_hour(df):
     plt.title('Pickup Hour Histogram')
     plt.xlabel('Hour')
     plt.show()
+
+def hist_fares(df):
+    df['fare_amount'].hist(bins=500)
+    plt.xlabel('Fare')
+    plt.title('Histogram of Fares')
+    plt.show()     
+
+def hist_passenger_count(df):
+    df['passenger_count'].hist(bins=6, ec='black')
+    plt.xlabel("Passenger Count")       
+    plt.title("Histogram of Passenger Count")
+    plt.show()

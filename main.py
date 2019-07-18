@@ -20,6 +20,11 @@ def data_cleaning():
     for lat in ['pickup_latitude', 'dropoff_latitude']:
         dfcopy = dfcopy[(dfcopy[lat] > nyc_min_latitude) &
                         (dfcopy[lat] < nyc_max_latitude)]
+
+    print(dfcopy.isnull().sum()) # result = 0.001% of missing data
+    dfcopy = dfcopy.dropna()
+    dfcopy = dfcopy[(dfcopy['fare_amount'] >= 0) & (dfcopy['fare_amount'] <= 100)]
+    dfcopy.loc[dfcopy['passenger_count'] == 0, 'passenger_count'] = 1
     return dfcopy
 
 def data_serialize(df2):    
@@ -33,7 +38,8 @@ def data_serialize(df2):
 df2 = data_cleaning()
 df2 = data_serialize(df2)
 
-graphic.plot_lat_long(df2)
-graphic.hist_rides_by_day(df2)
-graphic.hist_rides_by_hour(df2)
-
+# graphic.plot_lat_long(df2)
+# graphic.hist_rides_by_day(df2)
+# graphic.hist_rides_by_hour(df2)
+# graphic.hist_fares(df2)
+# graphic.hist_passenger_count(df2)
