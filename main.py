@@ -1,6 +1,12 @@
 import pandas as pd
 import vizualisation as graphic
 
+airports = {
+    'JFK_Airport': (-73.78, 40.643),
+    'Laguardia_Airport': (-73.87, 40.77),
+    'Newark_Airport': (-74.18, 40.69)
+}
+
 # found dataset on Kaggle
 df = pd.read_csv('NYC_taxi.csv', parse_dates=['pickup_datetime'], nrows=500000)
 
@@ -30,6 +36,12 @@ def data_cleaning():
 def euclidian_distance(lat1, long1, lat2, long2): # get distance between 2 points
     return (((lat1 - lat2) ** 2 + (long1 - long2) ** 2) ** 0.5)
 
+def airport_distance(df2):    
+    for airport in airports:
+        df2['pickup_dist_' + airport] = euclidian_distance(df2['pickup_latitude'], df2['pickup_longitude'], airports[airport][1], airports[airport][0])
+        df2['dropoff_dist_' + airport] = euclidian_distance(df2['dropoff_latitude'], df2['dropoff_longitude'], airports[airport][1], airports[airport][0])
+    return df2
+
 def feature_engineering(df2):    
     # convert date to numerical data
     df2['year'] = df2['pickup_datetime'].dt.year
@@ -38,10 +50,11 @@ def feature_engineering(df2):
     df2['day_of_week'] = df2['pickup_datetime'].dt.dayofweek
     df2['hour'] = df2['pickup_datetime'].dt.hour
     
-    df2.drop(['pickup_datetime'], axis=1, inplace=True) # drop useless column
+    df2.drop(['pickup_datetime', 'key'], axis=1, inplace=True) # drop useless column
 
     df2['distance'] = euclidian_distance(df2['pickup_latitude'], df2['pickup_longitude'], df2['dropoff_latitude'], df2['dropoff_longitude'])
-    return df2
+    df2 = airport_distance(df2)
+    return df2    
 
 df2 = data_cleaning()
 df2 = feature_engineering(df2)
@@ -51,4 +64,6 @@ df2 = feature_engineering(df2)
 # graphic.hist_rides_by_hour(df2)
 # graphic.hist_fares(df2)
 # graphic.hist_passenger_count(df2)
-graphic.scatter_fare_distance(df2)
+# graphic.scatter_fare_distance(df2)
+
+print(df2[['key', 'pickup_longitude', 'pickup_latitude', 'dropoff_longitude', 'dropoff_latitude', 'pickup_dist_JFK_Airport', 'dropoff_dist_JFK_Airport']].head())
