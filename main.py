@@ -1,6 +1,12 @@
 import pandas as pd
+import os 
 import vizualisation as graphic
 from sklearn.preprocessing import scale
+from sklearn.model_selection import train_test_split
+from keras.models import Sequential
+from keras.layers import Dense
+
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 airports = {
     'JFK_Airport': (-73.78, 40.643),
@@ -81,3 +87,18 @@ df2 = feature_engineering(df2)
 # print(df2[['key', 'pickup_longitude', 'pickup_latitude', 'dropoff_longitude', 'dropoff_latitude', 'pickup_dist_JFK_Airport', 'dropoff_dist_JFK_Airport']].head())
 
 df_prescaled, df_scaled = scale_df(df2)
+
+X = df_scaled.loc[:, df.columns != 'fare_amount']
+y = df_scaled.loc[:, 'fare_amount']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = Sequential()
+model.add(Dense(128, activation='relu', input_dim=X_train.shape[1]))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(8, activation='relu'))
+model.add(Dense(1))
+model.summary()
+
+model.compile(loss="mse", optimizer="adam", metrics=['mse'])
+model.fit(X_train, y_train, epochs=1)
