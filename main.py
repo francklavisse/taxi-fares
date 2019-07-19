@@ -4,6 +4,7 @@ import vizualisation as graphic
 import numpy as np
 from sklearn.preprocessing import scale
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 from keras.models import Sequential
 from keras.layers import Dense
 
@@ -112,6 +113,7 @@ model.add(Dense(8, activation='relu'))
 model.add(Dense(1))
 model.summary()
 
+
 model.compile(loss="mse", optimizer="adam", metrics=['mse'])
 model.fit(X_train, y_train, epochs=1)
 
@@ -135,3 +137,15 @@ def predict_random(df_prescaled, X_test, model):
 
 
 predict_random(df_prescaled, X_test, model)
+predict_random(df_prescaled, X_test, model)
+predict_random(df_prescaled, X_test, model)
+predict_random(df_prescaled, X_test, model)
+
+train_pred = model.predict(X_train)
+train_rmse = np.sqrt(mean_squared_error(y_train, train_pred))
+
+test_pred = model.predict(X_test)
+test_rmse = np.sqrt(mean_squared_error(y_test, test_pred))
+
+print("Train RMSE: {:0.2f}".format(train_rmse))
+print("Test RMSE: {:0.2f}".format(test_rmse))
